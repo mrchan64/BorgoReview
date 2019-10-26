@@ -1,0 +1,89 @@
+.normal-butt {
+  border-color: #333333;
+  background-color: white;
+  color: #333333;
+}
+.normal-butt:hover {
+  background-color: #aaaaaa;
+}
+
+.normal-butt.wrong-butt {
+  border-color: #aa0000;
+  background-color: white;
+  color: #aa0000;
+}
+
+.normal-butt.wrong-butt.selected {
+  background-color: #aa0000;
+  color: white;
+}
+
+.normal-butt.right-butt {
+  border-color: #00aa00;
+  background-color: white;
+  color: #00aa00;
+}
+
+.normal-butt.right-butt.selected {
+  background-color: #00aa00;
+  color: white;
+}
+
+.disable-butt {
+  pointer-events: none;
+}
+
+body.night {
+  background-color: black
+}
+
+label.night {
+  color: white;
+}
+
+.normal-butt.night {
+  border-color: white;
+  background-color: black;
+  color: white;
+}
+.normal-butt.night:hover {
+  border-color: white;
+  background-color: #333333;
+  color: white;
+}
+
+.normal-butt.wrong-butt.night {
+  border-color: #aa0000;
+  background-color: black;
+  color: #aa0000;
+}
+
+.normal-butt.wrong-butt.selected.night {
+  background-color: #aa0000;
+  color: white;
+}
+
+.normal-butt.right-butt.night {
+  border-color: #00aa00;
+  background-color: black;
+  color: #00aa00;
+}
+
+.normal-butt.right-butt.selected.night {
+  background-color: #00aa00;
+  color: black;
+}
+
+.button-primary.night {
+  border-color: #ffcc00 !important;
+  background-color: #ffcc00 !important;
+  color: black !important;
+}
+
+span.night {
+  color: white;
+}
+
+.resizefix {
+  margin-left: 0% !important;
+}
