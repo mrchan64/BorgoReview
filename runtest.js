@@ -13,10 +13,15 @@ var musicplayer = $('#musicplayer')[0];
 var numtotal = 0;
 var numcorrect = 0;
 
+var isartist = window.location.href.indexOf('singers') != -1;
+
+if(isartist) $('#testtype').attr("value", "Test Song Names Instead");
+
 function getNextTest(){
+  var url = isartist ? '/nextaudiosinger' : '/nextaudio';
   $.ajax({
     type: "POST",
-    url: '/nextaudio',
+    url: url,
     data: JSON.stringify({'past5ids': past5ids}),
     contentType: 'application/json',
     dataType:'json',
@@ -106,6 +111,11 @@ getNextTest();
 if(document.cookie.indexOf('nightmode=true')!=-1){
   toggleNightMode();
   $('#nightmode').prop('checked', 'true')
+}
+
+function toggleTestType() {
+  if(isartist) window.location = "/";
+  else window.location = "/singers"
 }
 
 function resize(){
