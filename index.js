@@ -37,7 +37,6 @@ app.post('/nextaudio', function(req, res){
     var randindex = Math.floor(Math.random()*audiodata.names.length);
     if(past5ids.indexOf(randindex)!=-1)continue;
     if(usedids.indexOf(randindex)!=-1)continue;
-    if(audiodata.names[randindex].length==0)continue;
     usedids.push(randindex);
     optionlist.push(audiodata.names[randindex]);
   }
@@ -72,6 +71,7 @@ app.post('/nextaudiosinger', function(req, res){
     var randindex = Math.floor(Math.random()*audiodata.singers.length);
     if(past5names.indexOf(audiodata.singers[randindex])!=-1)continue;
     if(usednames.indexOf(audiodata.singers[randindex])!=-1)continue;
+    if(audiodata.singers[randindex].length==0)continue;
     usedids.push(randindex);
     optionlist.push(audiodata.singers[randindex]);
   }
