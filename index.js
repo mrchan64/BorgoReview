@@ -73,6 +73,7 @@ app.post('/nextaudiosinger', function(req, res){
     if(usednames.indexOf(audiodata.singers[randindex])!=-1)continue;
     if(audiodata.singers[randindex].length==0)continue;
     usedids.push(randindex);
+    usednames.push(audiodata.singers[randindex]);
     optionlist.push(audiodata.singers[randindex]);
   }
   correctanswer = Math.floor(Math.random()*4);
