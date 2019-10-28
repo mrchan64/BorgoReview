@@ -25,6 +25,10 @@ app.get('/runtest.js', function(req, res){
   res.sendFile(path.join(__dirname, 'runtest.js'));
 })
 
+app.get('/favicon.ico', function(req, res){
+  res.sendFile(path.join(__dirname, 'blues-favicon.ico'));
+})
+
 app.post('/nextaudio', function(req, res){
   var optionlist = [];
   var correctanswer = -1;
