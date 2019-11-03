@@ -80,10 +80,46 @@ label.night {
   color: black !important;
 }
 
+.button-primary.night:hover {
+  border-color: #ddaf00 !important;
+  background-color: #ddaf00 !important;
+  color: black !important;
+}
+
 span.night {
   color: white;
 }
 
 .resizefix {
   margin-left: 0% !important;
+}
+
+select {
+  border-color: #333333;
+  background-color: white;
+  color: #333333;
+}
+
+select.night {
+  border-color: white;
+  background-color: black;
+  color: white;
+}
+
+select.correct {
+  border-color: #00aa00;
+  color: #00aa00;
+}
+
+select.wrong {
+  border-color: #aa0000;
+  color: #aa0000;
+}
+
+span.correct {
+  color: #00aa00;
+}
+
+span.wrong {
+  color: #aa0000;
 }

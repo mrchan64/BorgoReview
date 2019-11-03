@@ -41,13 +41,24 @@
   <div class="container">
     <div class="row" style="margin-top: 5%;">
       <div class="one-half column" id="testcol">
-        <label for="optselect">Select an Answer:</label>
-        <div class="row" id="optselect"><input id="opt0" class="u-full-width normal-butt" type="button" value="Option 0" onclick="optsel(0)"></div>
-        <div class="row"><input id="opt1" class="u-full-width normal-butt" type="button" value="Option 1" onclick="optsel(1)"></div>
-        <div class="row"><input id="opt2" class="u-full-width normal-butt" type="button" value="Option 2" onclick="optsel(2)"></div>
-        <div class="row"><input id="opt3" class="u-full-width normal-butt" type="button" value="Option 3" onclick="optsel(3)"></div>
-        <label for="nextsong" id=score></label>
-        <div class="row" id="nextsong"><input class="button-primary u-full-width" type="button" value="Next Song" onclick="getNextTest()"></div>
+        <label for="selectartist" id="artistsel">Select Singer Name:</label>
+        <div class="row" id="selectartist">
+          <select id="artistdrop" class="u-full-width">
+          </select>
+        </div>
+        <label for="selectsong" id="songsel">Select Song Name:</label>
+        <div class="row" id="selectsong">
+          <select id="songdrop" class="u-full-width">
+          </select>
+        </div>
+        <label for="selectgenre" id="genresel">Select Song Genre:</label>
+        <div class="row" id="selectgenre">
+          <select id="genredrop" class="u-full-width">
+          </select>
+        </div>
+        <div class="row"><input id="checksong" class="button-primary u-full-width" type="button" value="Check Answer" onclick="checkSong()"></div>
+        <label id="score">Score: 0 / 0</label>
+        <label>Correct Answer:<br><span id="corrartist"></span><br><span id="corrsong"></span><br><span id="corrgenre"></span></label>
       </div>
       <div class="one-half column" id="optcol">
         <label for="playoptions">Play Options:</label>
@@ -66,11 +77,7 @@
           <input type="checkbox" id="nightmode" onchange="toggleNightMode()">
           <span class="label-body">Night mode (dark mode)</span>
         </label>
-        <div class="row"><input id="testtype" class="u-full-width normal-butt" type="button" value="Test Singers Instead" onclick="toggleTestType()"></div>
-        <!--<label>
-          <input type="checkbox" id="loopsong">
-          <span class="label-body">Loop Song</span>
-        </label>-->
+        <!-- <div class="row"><input id="testtype" class="u-full-width normal-butt" type="button" value="Test Singers Instead" onclick="toggleTestType()"></div> -->
       </div>
     </div>
   </div>

@@ -1,10 +1,5 @@
-var optstore = [];
-optstore[0] = $('#opt0');
-optstore[1] = $('#opt1');
-optstore[2] = $('#opt2');
-optstore[3] = $('#opt3');
-
-var correctoption = -1;
+var correctData = {};
+var optiondata = {};
 
 var past5ids = [];
 
@@ -13,11 +8,15 @@ var musicplayer = $('#musicplayer')[0];
 var numtotal = 0;
 var numcorrect = 0;
 
+var maxids = -1;
+
 var isartist = window.location.href.indexOf('singers') != -1;
+var answersubmitted = true;
 
 if(isartist) $('#testtype').attr("value", "Test Song Names Instead");
 
 function getNextTest(){
+  if(!answersubmitted)return;
   var url = isartist ? '/nextaudiosinger' : '/nextaudio';
   $.ajax({
     type: "POST",
@@ -26,19 +25,25 @@ function getNextTest(){
     contentType: 'application/json',
     dataType:'json',
     success: (data)=>{
-      optstore[0].removeClass("wrong-butt selected right-butt disable-butt")
-      optstore[1].removeClass("wrong-butt selected right-butt disable-butt")
-      optstore[2].removeClass("wrong-butt selected right-butt disable-butt")
-      optstore[3].removeClass("wrong-butt selected right-butt disable-butt")
-      optstore[0].attr("value", data.optionlist[0])
-      optstore[1].attr("value", data.optionlist[1])
-      optstore[2].attr("value", data.optionlist[2])
-      optstore[3].attr("value", data.optionlist[3])
+      if(data.correctsinger == -1 || data.correctsong == -1 || data.correctgenre == -1) console.log("Something in the return data could not be found???");
+      $('#artistdrop').removeClass('correct wrong');
+      $('#songdrop').removeClass('correct wrong');
+      $('#genredrop').removeClass('correct wrong');
+      $('#corrartist').html('');
+      $('#corrsong').html('');
+      $('#corrgenre').html('');
+      $('#corrartist').removeClass('correct wrong');
+      $('#corrsong').removeClass('correct wrong');
+      $('#corrgenre').removeClass('correct wrong');
+      correctData.correctsinger = data.correctsinger;
+      correctData.correctsong = data.correctsong;
+      correctData.correctgenre = data.correctgenre;
       past5ids.push(data.correctanswerid);
-      correctoption = data.correctanswer;
+      if(past5ids.length > data.idlimit) past5ids.shift();
+      maxids = data.idlimit;
+
       $('#score').html('Score: '+numcorrect+' / '+numtotal);
-      numtotal++;
-      if(past5ids.length > 5) past5ids.shift();
+      numtotal+=3;
       $('#sourcefile').attr("src", data.filelink)
       musicplayer.load();
       musicplayer.pause();
@@ -50,6 +55,7 @@ function getNextTest(){
         musicplayer.play();
         if(!musicplayer.paused)$('#playbutt').attr('value', 'Pause');
       }
+      $('#checksong').attr('value', 'Check Answer')
     },
     error: (error)=>{
       console.log("error loading next test")
@@ -57,19 +63,43 @@ function getNextTest(){
   });
 }
 
-function optsel(num){
-  for(var i = 0; i<4; i++){
-    if(i==correctoption){
-      optstore[i].addClass("right-butt disable-butt")
+function checkSong(){
+  if(answersubmitted){
+    getNextTest();
+    answersubmitted = false;
+  }else{
+    $('#corrartist').html((correctData.correctsinger+1)+'. '+optiondata.artistnames[correctData.correctsinger]);
+    if($('#artistdrop').val()==correctData.correctsinger){
+      numcorrect++;
+      $('#artistdrop').addClass('correct');
+      $('#corrartist').addClass('correct');
     }else{
-      optstore[i].addClass("wrong-butt disable-butt")
+      $('#artistdrop').addClass('wrong');
+      $('#corrartist').addClass('wrong');
     }
-    if(i==num){
-      optstore[i].addClass("selected")
+
+    $('#corrsong').html((correctData.correctsong+1)+'. '+optiondata.songnames[correctData.correctsong]);
+    if($('#songdrop').val()==correctData.correctsong){
+      numcorrect++;
+      $('#songdrop').addClass('correct');
+      $('#corrsong').addClass('correct');
+    }else{
+      $('#songdrop').addClass('wrong');
+      $('#corrsong').addClass('wrong');
     }
-  }
-  if(num==correctoption){
-    numcorrect++;
+
+    $('#corrgenre').html((correctData.correctgenre+1)+'. '+optiondata.genres[correctData.correctgenre]);
+    if($('#genredrop').val()==correctData.correctgenre){
+      numcorrect++;
+      $('#genredrop').addClass('correct');
+      $('#corrgenre').addClass('correct');
+    }else{
+      $('#genredrop').addClass('wrong');
+      $('#corrgenre').addClass('wrong');
+    }
+
+    $('#checksong').attr('value', 'Next Song')
+    answersubmitted = true;
   }
 }
 
@@ -106,8 +136,6 @@ function toggleNightMode() {
   night = !night;
 }
 
-getNextTest();
-
 if(document.cookie.indexOf('nightmode=true')!=-1){
   toggleNightMode();
   $('#nightmode').prop('checked', 'true')
@@ -129,3 +157,25 @@ function resize(){
 }
 resize();
 $(window).resize(resize);
+
+// populate options
+$.get("allchoices", (data)=>{
+  optiondata = data;
+  var artists = $('#artistdrop')
+  artists.find('option').remove();
+  data.artistnames.forEach((name, ind)=>{
+    artists.append($('<option/>').attr('value', ind).text((ind+1)+". "+name))
+  })
+  var songs = $('#songdrop')
+  songs.find('option').remove();
+  data.songnames.forEach((name, ind)=>{
+    songs.append($('<option/>').attr('value', ind).text((ind+1)+". "+name))
+  })
+  var genres = $('#genredrop')
+  genres.find('option').remove();
+  data.genres.forEach((name, ind)=>{
+    genres.append($('<option/>').attr('value', ind).text((ind+1)+". "+name))
+  })
+})
+
+checkSong();

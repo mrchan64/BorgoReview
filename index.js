@@ -7,6 +7,28 @@ var app = express();
 app.use(bodyParser.json());
 
 var audiodata = require('./fileids.json');
+var optiondata = require('./testsongs.json');
+
+function checkTestData() {
+  var counter = 0;
+  for(var i = 0; i<audiodata.names.length; i++){
+    if(audiodata.genres[i]=="")continue;
+    var a = -1, b = -1, c = -1
+    a = optiondata.artistnames.indexOf(audiodata.singers[i]);
+    b = optiondata.genres.indexOf(audiodata.genres[i]);
+    if(audiodata.names[i] == "Tutti Frutti 2")
+      c = optiondata.songnames.indexOf("Tutti Frutti");
+    else if(audiodata.names[i] == "Hound Dog 2")
+      c = optiondata.songnames.indexOf("Hound Dog");
+    else
+      c = optiondata.songnames.indexOf(audiodata.names[i]);
+    if(a==-1 || b==-1 || c==-1){
+      console.log("Check index "+i+" song: "+audiodata.names[i] + " | "+a+" "+b+" "+c);
+      counter++
+    }
+  }
+  console.log("Database has "+counter+" association problems.")
+}
 
 //app.use(express.static(__dirname));
 app.get('/', function(req, res){
@@ -30,67 +52,47 @@ app.get('/favicon.ico', function(req, res){
 })
 
 app.post('/nextaudio', function(req, res){
-  var optionlist = [];
-  var correctanswer = -1;
+  var correctsinger = -1;
+  var correctsong = -1;
+  var correctgenre = -1;
   var correctanswerid = -1;
   var filelink = "";
 
   var past5ids = req.body.past5ids;
-  var usedids = [];
-  while(optionlist.length < 4){
+  while(true){
     var randindex = Math.floor(Math.random()*audiodata.names.length);
     if(past5ids.indexOf(randindex)!=-1)continue;
-    if(usedids.indexOf(randindex)!=-1)continue;
-    usedids.push(randindex);
-    optionlist.push(audiodata.names[randindex]);
+    if(audiodata.genres[randindex]=="")continue;
+    correctanswerid = randindex;
+    correctsinger = optiondata.artistnames.indexOf(audiodata.singers[randindex]);
+    correctgenre = optiondata.genres.indexOf(audiodata.genres[randindex]);
+    filelink = audiodata.links[randindex];
+
+    // temp fix for tf2 and hd2
+    if(audiodata.names[randindex] == "Tutti Frutti 2")
+      correctsong = optiondata.songnames.indexOf("Tutti Frutti");
+    else if(audiodata.names[randindex] == "Hound Dog 2")
+      correctsong = optiondata.songnames.indexOf("Hound Dog");
+    else
+      correctsong = optiondata.songnames.indexOf(audiodata.names[randindex]);
+    break;
   }
-  correctanswer = Math.floor(Math.random()*4);
-  correctanswerid = usedids[correctanswer];
-  filelink = audiodata.links[correctanswerid];
 
   res.json({
-    optionlist,
-    correctanswer,
+    correctsinger,
+    correctsong,
+    correctgenre,
     correctanswerid,
-    filelink
+    filelink,
+    idlimit: process.env.idlimit || 5
   })
 })
 
-app.post('/nextaudiosinger', function(req, res){
-  var optionlist = [];
-  var correctanswer = -1;
-  var correctanswerid = -1;
-  var filelink = "";
-
-  var past5ids = req.body.past5ids;
-  var usedids = [];
-
-  var past5names = [];
-  var usednames = [];
-
-  for(var i = 0; i < 5; i++){
-    past5names.push(audiodata.singers[past5ids[i]]);
-  }
-  while(optionlist.length < 4){
-    var randindex = Math.floor(Math.random()*audiodata.singers.length);
-    if(past5names.indexOf(audiodata.singers[randindex])!=-1)continue;
-    if(usednames.indexOf(audiodata.singers[randindex])!=-1)continue;
-    if(audiodata.singers[randindex].length==0)continue;
-    usedids.push(randindex);
-    usednames.push(audiodata.singers[randindex]);
-    optionlist.push(audiodata.singers[randindex]);
-  }
-  correctanswer = Math.floor(Math.random()*4);
-  correctanswerid = usedids[correctanswer];
-  filelink = audiodata.links[correctanswerid];
-
-  res.json({
-    optionlist,
-    correctanswer,
-    correctanswerid,
-    filelink
-  })
+app.get('/allchoices', function(req, res){
+  res.json(optiondata);
 })
+
+checkTestData();
 
 var server = http.createServer(app);
 
