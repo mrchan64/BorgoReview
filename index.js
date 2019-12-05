@@ -9,6 +9,8 @@ app.use(bodyParser.json());
 var audiodata = require('./fileids.json');
 var optiondata = require('./testsongs.json');
 
+var audiodata2 = require('./fileids2.json');
+
 function checkTestData() {
   var counter = 0;
   for(var i = 0; i<audiodata.names.length; i++){
@@ -30,9 +32,27 @@ function checkTestData() {
   console.log("Database has "+counter+" association problems.")
 }
 
+function checkTestData2() {
+  if(!(audiodata2.links.length == audiodata2.names.length && audiodata2.names.length == audiodata2.singers.length)){
+    console.log("Database 2 has some list length problems")
+    return;
+  }
+  audiodata2.namechoices=[];
+  audiodata2.singerchoices=[];
+  for(var i = 0; i<audiodata2.links.length; i++){
+    if(audiodata2.namechoices.indexOf(audiodata2.names[i])==-1)audiodata2.namechoices.push(audiodata2.names[i]);
+    if(audiodata2.singerchoices.indexOf(audiodata2.singers[i])==-1)audiodata2.singerchoices.push(audiodata2.singers[i]);
+  }
+  audiodata2.namechoices.sort();
+  audiodata2.singerchoices.sort();
+}
+
 //app.use(express.static(__dirname));
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'index.html'));
+})
+app.get('/unit2', function(req, res){
+  res.sendFile(path.join(__dirname, 'index2.html'));
 })
 
 app.get('/singers', function(req, res){
@@ -45,6 +65,10 @@ app.get('/style.css', function(req, res){
 
 app.get('/runtest.js', function(req, res){
   res.sendFile(path.join(__dirname, 'runtest.js'));
+})
+
+app.get('/runtest2.js', function(req, res){
+  res.sendFile(path.join(__dirname, 'runtest2.js'));
 })
 
 app.get('/favicon.ico', function(req, res){
@@ -88,11 +112,46 @@ app.post('/nextaudio', function(req, res){
   })
 })
 
+app.post('/nextaudio2', function(req, res){
+  var correctsinger = -1;
+  var correctsong = -1;
+  var correctanswerid = -1;
+  var filelink = "";
+
+  var past5ids = req.body.past5ids;
+  while(true){
+    var randindex = Math.floor(Math.random()*audiodata2.names.length);
+    if(past5ids.indexOf(randindex)!=-1)continue;
+    correctanswerid = randindex;
+    correctsinger = audiodata2.singerchoices.indexOf(audiodata2.singers[randindex]);
+    correctsong = audiodata2.namechoices.indexOf(audiodata2.names[randindex]);
+    filelink = audiodata2.links[randindex];
+    break;
+  }
+
+  res.json({
+    correctsinger,
+    correctsong,
+    correctanswerid,
+    filelink,
+    idlimit: process.env.idlimit || 5
+  })
+})
+
 app.get('/allchoices', function(req, res){
   res.json(optiondata);
 })
 
+app.get('/allchoices2', function(req, res){
+  var newop = {
+    namechoices: audiodata2.namechoices,
+    singerchoices: audiodata2.singerchoices
+  }
+  res.json(newop);
+})
+
 checkTestData();
+checkTestData2();
 
 var server = http.createServer(app);
 

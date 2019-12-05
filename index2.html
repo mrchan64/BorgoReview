@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>MUS126 Song Reviewer</title>
+  <meta name="description" content="MUS 126 Review">
+  <meta name="author" content="Matthew R. Chan">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" href="favicon.ico">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row" style="margin-top: 5%;">
+      <div class="one-half column" id="testcol">
+        <label for="selectartist" id="artistsel">Select Singer Name:</label>
+        <div class="row" id="selectartist">
+          <select id="artistdrop" class="u-full-width">
+          </select>
+        </div>
+        <label for="selectsong" id="songsel">Select Song Name:</label>
+        <div class="row" id="selectsong">
+          <select id="songdrop" class="u-full-width">
+          </select>
+        </div>
+        <div class="row"><input id="checksong" class="button-primary u-full-width" type="button" value="Check Answer" onclick="checkSong()"></div>
+        <label id="score">Score: 0 / 0</label>
+        <label>Correct Answer:<br><span id="corrartist"></span><br><span id="corrsong"></span></label>
+      </div>
+      <div class="one-half column" id="optcol">
+        <label for="playoptions">Play Options:</label>
+        <div class="row" id="playoptions"><input class="button-primary u-full-width" type="button" value="Play" onclick="togglePlay()" id="playbutt"></div>
+        <div class="row"><input class="button-primary u-full-width" type="button" value="Restart Song" onclick="restart()"></div>
+        <label for="options">Options:</label>
+        <label id=options>
+          <input type="checkbox" id="skip10">
+          <span class="label-body">Skip first 10 seconds</span>
+        </label>
+        <label>
+          <input type="checkbox" id="play2x" onchange="play2xtoggled()">
+          <span class="label-body">Play at 2x speed</span>
+        </label>
+        <label>
+          <input type="checkbox" id="nightmode" onchange="toggleNightMode()">
+          <span class="label-body">Night mode (dark mode)</span>
+        </label>
+        <!-- <div class="row"><input id="testtype" class="u-full-width normal-butt" type="button" value="Test Singers Instead" onclick="toggleTestType()"></div> -->
+      </div>
+    </div>
+  </div>
+
+  <audio autoplay=false style="display:hidden" id=musicplayer loop>
+    <source id="sourcefile" src="" type="audio/mpeg">
+  </audio>
+
+  <!-- Scripts -->
+  <script src="runtest2.js"></script>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
